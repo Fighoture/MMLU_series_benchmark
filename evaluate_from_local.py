@@ -148,8 +148,10 @@ def load_model(prune_subject=None):
                 trust_remote_code=True,
             )
         llm.generation_config = GenerationConfig.from_pretrained(args.model)
-        llm.generation_config.pad_token_id = llm.generation_config.eos_token_id
-        print(f"pad_token_id: {llm.generation_config.eos_token_id}")
+        if not hasattr(llm.generation_config, "pad_token_id"):
+            llm.generation_config.pad_token_id = llm.generation_config.eos_token_id
+        if isinstance(llm.generation_config.eos_token_id, list):
+            llm.generation_config.eos_token_id = llm.generation_config.pad_token_id
         if args.peft_model != ".":
             dir_list = os.listdir(args.peft_model)
             if "adapter_model.safetensors" not in dir_list:
