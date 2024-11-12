@@ -24,7 +24,9 @@ mmlu_subject_to_pruned_mask = {"college_mathematics": "MathInstruct",
                                "college_computer_science": "code_alpaca_20k",
                                "high_school_mathematics": "MathInstruct",
                                "high_school_computer_science": "code_alpaca_20k",
-                               "high_school_microeconomics": "finance_alpaca"}
+                               "high_school_microeconomics": "finance_alpaca",
+                               "high_school_macroeconomics": "finance_alpaca",
+                               "econometrics": "finance_alpaca"}
 mmlupro_subject_to_pruned_mask = {"computer_science": "code_alpaca_20k",
                                   "business": "finance_alpaca",
                                   "math": "MathInstruct"}
