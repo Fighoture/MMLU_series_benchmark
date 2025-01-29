@@ -10,13 +10,14 @@ from transformers import AutoModelForCausalLM, AutoTokenizer, GenerationConfig, 
 import transformers
 import time
 import re
-from vllm import LLM, SamplingParams
+# from vllm import LLM, SamplingParams
 from tqdm import tqdm
 from peft import LoraConfig, TaskType, get_peft_model, PeftModel
 from distutils.util import strtobool
 import logging
 import sys
 from datasets import load_dataset
+
 
 choices = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P"]
 answer_to_idx = {'A':0, 'B':1, 'C':2, 'D':3}
@@ -31,7 +32,7 @@ mmlupro_subject_to_pruned_mask = {"computer_science": "code_alpaca_20k",
                                   "business": "finance_alpaca",
                                   "math": "MathInstruct"}
 max_model_length = 4096
-max_new_tokens = 256
+max_new_tokens = 128
 
 class StopOnKeyword(StoppingCriteria):
     def __init__(self, tokenizer, stop_string, existing_number=1):
@@ -228,16 +229,16 @@ def generate_cot_prompt(val_df, curr, k):
         for line in fi.readlines():
             prompt = line
             break
-        if "_" in subject:
-            subject = " ".join(subject.split("_"))
-        prompt = prompt.replace("{$}", subject) + "\n"
+    if "_" in subject:
+        subject = " ".join(subject.split("_"))
+    prompt = prompt.replace("{$}", subject)
 
     if k > 0:
         val_df = val_df[: k]
-        prompt += "Below are examples of the format to follow:\n"
+        prompt += f" Below are {k} examples of such questions and answers:\n\n"
         for example in val_df:
             prompt += format_cot_example(example, including_answer=True)
-        prompt += "Now answer this question:\n"
+        prompt += "Now think step by step and answer this question according to above format:\n"
     prompt += format_cot_example(curr, including_answer=False)
     return prompt
 

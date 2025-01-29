@@ -3,4 +3,4 @@ mmlu_dataset/
 mmlupro_dataset/
 mmlu_eval_results/
 mmlupro_eval_results/
-
+log/
